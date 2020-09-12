@@ -19,25 +19,4 @@ const CreateAccountScreen = ({ navigation }) => {
   );
 };
 
-// const CreateAccountScreen = ({ navigation }) => {
-//     const createUser = async () => {
-//       createAccount('test@test.ca', 'password')
-//         .then(async (res) => {
-//           await setToken(res.auth_token);
-//           navigation.navigate('Home');
-//         })
-//         .catch((err) => console.log('error', err.message));
-//     };
-
-//     return (
-//       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-//         <Text>Create Account Screen</Text>
-//         <Button title="Create user" onPress={createUser} />
-//         <View style={{ margin: 20 }}>
-//           <Button title="Log out" onPress={() => navigation.navigate('Login')} />
-//         </View>
-//       </View>
-//     );
-// };
-
 export default CreateAccountScreen;
