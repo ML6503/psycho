@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import { View, Text, Button } from 'react-native';
-import { login } from '../src/api/mock';
-import { setToken } from '../src/api/token';
+// import { login } from '../src/api/mock';
+import { login } from '../src/api/account';
+// import { setToken } from '../src/api/token';
 import EmailForm from '../src/forms/EmailForm';
 
 const LoginScreen = ({ navigation }) => {
@@ -9,7 +10,7 @@ const LoginScreen = ({ navigation }) => {
     <EmailForm
       buttonText="Log in"
       onSubmit={login}
-      onAuthentication={() => navigation.navigate('Home')}
+      onAuthentication={({user: data}) => navigation.navigate('Home', {user: data})}
     >
       <Button
         title="Create account"

@@ -12,6 +12,7 @@ export const getToken = async () => {
 };
 
 export const setToken = async (token) => {
+  console.log("we are in setTOKEN");
   try {
     await AsyncStorage.setItem('@auth_token', token);
   } catch (e) {

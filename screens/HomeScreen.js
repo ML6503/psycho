@@ -3,28 +3,29 @@ import { View, Text, Button } from 'react-native';
 import {  getUsers } from '../src/api/mock';
 import { setToken } from '../src/api/token';
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, user }) => {
   const [users, setUsers ] = useState([]);
   const [hasLoadedUsers, setHasLoadedUsers] = useState(false);
   const [userLoadingErrorMessage, setUserLoadingErrorMessage] = useState('');
   const mountedRef = useRef(true);
   
-  handleUserLoadingError = (res) => {
-    if(res.error === 401) {
+  function handleUserLoadingError(res) {
+    if (res.error === 401) {
       navigation.navigate('Login');
     } else {
       setHasLoadedUsers(false);
       setUserLoadingErrorMessage(res.message);
     }
-  };
+  }
 
   const loadUsers = () => {    
     setHasLoadedUsers(false);
     setUserLoadingErrorMessage('');
-    getUsers()
+    // getUsers()
+    setUsers(user)
       .then((res) => {        
         setHasLoadedUsers(true);
-        setUsers(res.users);
+        // setUsers(res.users);
         if (!mountedRef.current) return null;
       })
         .catch(handleUserLoadingError);
