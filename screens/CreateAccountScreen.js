@@ -12,7 +12,10 @@ const CreateAccountScreen = ({ navigation }) => {
     <EmailForm
       buttonText="Sign up"
       onSubmit={createAccount}
-      onAuthentication={({user: data}) => navigation.navigate('Home', {user: data})}
+      onAuthentication={({user: data}) => {
+        console.log('USER from onAuthent!!', {user: data});
+        navigation.navigate('Home', {user: data});
+      }}
       newAccount={true}
       navigation={navigation}
     >

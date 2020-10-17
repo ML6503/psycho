@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {  ScrollView, StyleSheet, TextInput, Button, Text, View } from 'react-native';
 import { setToken } from '../api/token';
+import { firebase } from '../firebase/config'
 
 const EmailForm = ({ buttonText, onSubmit, newAccount, children, onAuthentication }) => {
     const [fullName, setFullName] = useState('');
@@ -9,16 +10,73 @@ const EmailForm = ({ buttonText, onSubmit, newAccount, children, onAuthenticatio
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-    const submit = () => {
-        
-        onSubmit(email, password, onAuthentication, confirmPassword, fullName)
-            // .then(async (res) => {
-            //     await setToken(res.auth_token);
-            //     onAuthentication({user: data});
-            // })
-                // .catch((res) => setErrorMessage(res.error));
+    // const submit = () => {
+    //     onSubmit(email, password, onAuthentication, confirmPassword, fullName)
+    //         // .then(async (res) => {
+    //         //     // await setToken(res.auth_token);
+    //         //     onAuthentication({user: data});
+    //         // })
+    //         //     .catch((res) => setErrorMessage(res.error));
+    // };
+    const onRegisterPress = () => {
+        if (password !== confirmPassword) {
+            alert("Passwords don't match.")
+            return
+        }
+        firebase
+            .auth()
+            .createUserWithEmailAndPassword(email, password)
+            .then((response) => {
+                const uid = response.user.uid
+                const data = {
+                    id: uid,
+                    email,
+                    fullName,
+                };
+                const usersRef = firebase.firestore().collection('users')
+                usersRef
+                    .doc(uid)
+                    .set(data)
+                    .then(() => {
+                        // navigation.navigate('Home', {user: data})
+                        onAuthentication({user: data});
+                    })
+                    .catch((error) => {
+                        alert(error)
+                    });
+            })
+            .catch((error) => {
+                alert(error)
+        });
     };
 
+    const onLoginPress = () => {
+        firebase
+            .auth()
+            .signInWithEmailAndPassword(email, password)
+            .then((response) => {
+                const uid = response.user.uid
+                const usersRef = firebase.firestore().collection('users')
+                usersRef
+                    .doc(uid)
+                    .get()
+                    .then(firestoreDocument => {
+                        if (!firestoreDocument.exists) {
+                            alert("User does not exist anymore.")
+                            return;
+                        }
+                        const user = firestoreDocument.data()
+                        // navigation.navigate('Home', {user})
+                        onAuthentication({user});
+                    })
+                    .catch(error => {
+                        alert(error)
+                    });
+            })
+            .catch(error => {
+                alert(error)
+            })
+    };
   
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -67,7 +125,12 @@ const EmailForm = ({ buttonText, onSubmit, newAccount, children, onAuthenticatio
             />
             )}
             <View style={{ margin: 20 }}>
-                <Button title={buttonText} onPress={submit} />
+                {/* <Button title={buttonText} onPress={submit} /> */}
+                
+                {newAccount
+                ? <Button title={buttonText} onPress={onRegisterPress} />
+                : <Button title={buttonText} onPress={onLoginPress} /> }
+                
             </View>
             {errorMessage ? <Text>{errorMessage}</Text> : null}
             {children}

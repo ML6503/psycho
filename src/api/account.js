@@ -53,11 +53,11 @@ export const createAccount = (email, password,  onAuthentication, confirmPasswor
             const usersRef = firebase.firestore().collection('users')
             usersRef
                 .doc(uid)
-                .set(data)        
-                .then((response) => {
-                  console.log("we created user", response.user);
-                    onAuthentication({user: response.user});
-                })
+                .set(data)
+                onAuthentication({user: data})        
+                // .then(() => {                  
+                //     onAuthentication({user: response.user});
+                // })
                 .catch((res) => {
                     alert(res.error)
                 });
@@ -83,6 +83,7 @@ export const login = (email, password, onAuthentication) => {
                         return;
                     }
                     const user = firestoreDocument.data()
+                    console.log("we SUBMIT @ login and user is:", user );
                     // navigation.navigate('Home', {user})
                     onAuthentication({user: user});
                 })

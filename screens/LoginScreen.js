@@ -10,7 +10,7 @@ const LoginScreen = ({ navigation }) => {
     <EmailForm
       buttonText="Log in"
       onSubmit={login}
-      onAuthentication={({user: data}) => navigation.navigate('Home', {user: data})}
+      onAuthentication={(user) => navigation.navigate('Home', { user })}
     >
       <Button
         title="Create account"
